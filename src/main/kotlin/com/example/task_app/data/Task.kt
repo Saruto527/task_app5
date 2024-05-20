@@ -30,6 +30,12 @@ class Task {
     @Column(name = "created_on")
     var createdOn: LocalDateTime = LocalDateTime.now()
 
+    @Column(name ="file", nullable = true)
+    var file: String? = null
+
+
+
+
 
 
 }

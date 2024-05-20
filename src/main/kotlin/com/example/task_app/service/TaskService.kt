@@ -4,7 +4,6 @@ import com.example.task_app.data.Task
 import com.example.task_app.data.model.TaskCreateRequest
 import com.example.task_app.data.model.TaskDto
 import com.example.task_app.data.model.TaskUpdateRequest
-import com.example.task_app.exception.BadRequestException
 import com.example.task_app.exception.TaskNotFoundException
 import com.example.task_app.repository.TaskRepository
 import org.springframework.stereotype.Service
@@ -15,14 +14,15 @@ import kotlin.reflect.full.memberProperties
 
 
 @Service
-class TaskService(private val repository: TaskRepository) {
+class TaskService(private val repository: TaskRepository, private val fileService: UploadService) {
 
     private fun mappingEntityToDto(task: Task) = TaskDto(
            task.id,
            task.description,
            task.isRemindersSet,
            task.isTaskOpen,
-           task.createdOn
+           task.createdOn,
+           task.file
     )
 
     private fun mappingFromRequestToEntity(task: Task, taskCreateRequest: TaskCreateRequest){
@@ -61,6 +61,14 @@ class TaskService(private val repository: TaskRepository) {
 //        }
 
         val task = Task()
+        val file = fileService.upload(request.file)
+
+        when(file){
+            FileStatus.Empty -> throw Exception("File is empty, please check to upload a valid file!")
+            FileStatus.Existing -> throw Exception("File already exists, please upload a new file!")
+            FileStatus.Omitted -> Unit
+            is FileStatus.Safe -> task.file = file.file
+        }
         mappingFromRequestToEntity(task, request)
         val savedTask: Task = repository.save(task)
         return mappingEntityToDto(savedTask)

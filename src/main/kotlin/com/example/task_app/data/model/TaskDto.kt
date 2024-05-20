@@ -13,6 +13,7 @@ val description: String,
 val isRemindersSet: Boolean,
 val isTaskOpen: Boolean,
 val createdOn: LocalDateTime,
+    val file: String?
 
 
 )

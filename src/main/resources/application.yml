@@ -1,6 +1,9 @@
 logging:
   file:
     name: app.log
+
+encryption:
+  key: 45678845367465764582145678974131
 server:
   error:
     include-binding-errors: always
@@ -23,3 +26,8 @@ spring:
           lob:
             non_contextual_creation: true
     show-sql: true
+  data:
+    redis:
+      host: redis-10521.c239.us-east-1-2.ec2.redns.redis-cloud.com
+      port: 10521
+      password: vbQOUQdABZEwJKF151bPV5bxL3Klqu7f
